@@ -1,0 +1,1662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CardBridge — Fintech Marketplace</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --cb-gold:#C9A84C;--cb-gold-light:#F0D98A;--cb-gold-dark:#8B6914;
+  --cb-navy:#0D1B2A;--cb-navy-mid:#1A2E42;--cb-navy-light:#243B55;
+  --cb-mint:#2EC4B6;--cb-mint-light:#7EDDD7;
+  --cb-cream:#F8F4ED;--cb-cream-dark:#EDE8DF;
+  --cb-danger:#E05252;--cb-success:#2EC46A;--cb-warning:#E8A22A;
+  --cb-text:#0D1B2A;--cb-text-muted:#5A6A7A;--cb-text-light:#8A9BAC;
+  --cb-border:#E2DDD5;--cb-surface:#FFFFFF;
+  --r-sm:8px;--r-md:12px;--r-lg:18px;--r-xl:24px;--r-full:999px;
+}
+body{font-family:'DM Sans',sans-serif;background:var(--cb-cream);color:var(--cb-text);min-height:100vh;overflow-x:hidden}
+
+/* ═══════════════════════════════ NAV ═══════════════════════════════ */
+nav{background:var(--cb-navy);padding:0 40px;display:flex;align-items:center;justify-content:space-between;height:64px;position:sticky;top:0;z-index:100}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff;display:flex;align-items:center;gap:8px}
+.logo-icon{width:32px;height:32px;background:var(--cb-gold);border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--cb-navy);font-size:16px;font-weight:800}
+.nav-links{display:flex;align-items:center;gap:8px}
+.nav-link{color:#94A8BC;font-size:14px;font-weight:400;padding:8px 14px;border-radius:var(--r-sm);cursor:pointer;transition:all 0.2s;border:none;background:none;font-family:'DM Sans',sans-serif}
+.nav-link:hover,.nav-link.active{color:#fff;background:rgba(255,255,255,0.08)}
+.nav-cta{background:var(--cb-gold);color:var(--cb-navy);font-size:14px;font-weight:600;padding:8px 20px;border-radius:var(--r-full);cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:all 0.2s}
+.nav-cta:hover{background:var(--cb-gold-light)}
+
+/* ═══════════════════════════════ LAYOUT ═══════════════════════════════ */
+.app{display:flex;min-height:calc(100vh - 64px)}
+.sidebar{width:240px;background:var(--cb-surface);border-right:1px solid var(--cb-border);padding:24px 16px;flex-shrink:0;display:flex;flex-direction:column;gap:4px}
+.sidebar-section{font-size:10px;font-weight:600;letter-spacing:0.08em;color:var(--cb-text-light);text-transform:uppercase;padding:16px 12px 8px;margin-top:8px}
+.sidebar-section:first-of-type{margin-top:0}
+.sidebar-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-md);cursor:pointer;color:var(--cb-text-muted);font-size:14px;font-weight:400;transition:all 0.15s;border:none;background:none;width:100%;text-align:left;font-family:'DM Sans',sans-serif}
+.sidebar-item i{font-size:18px;width:20px;text-align:center;flex-shrink:0}
+.sidebar-item:hover{background:var(--cb-cream);color:var(--cb-text)}
+.sidebar-item.active{background:var(--cb-navy);color:#fff}
+.sidebar-item .badge{margin-left:auto;background:var(--cb-gold);color:var(--cb-navy);font-size:10px;font-weight:700;padding:2px 7px;border-radius:var(--r-full)}
+.content{flex:1;overflow:auto}
+
+/* ═══════════════════════════════ PAGES ═══════════════════════════════ */
+.page{display:none;padding:32px 40px;animation:fadeIn 0.2s ease}
+.page.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══════════════════════════════ PAGE HEADER ═══════════════════════════════ */
+.page-header{margin-bottom:32px}
+.page-title{font-family:'Syne',sans-serif;font-weight:700;font-size:28px;color:var(--cb-navy);line-height:1.2}
+.page-sub{color:var(--cb-text-muted);font-size:15px;margin-top:6px}
+
+/* ═══════════════════════════════ STAT CARDS ═══════════════════════════════ */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px}
+.stat-card{background:var(--cb-surface);border:1px solid var(--cb-border);border-radius:var(--r-lg);padding:20px}
+.stat-label{font-size:12px;color:var(--cb-text-muted);font-weight:500;letter-spacing:0.02em}
+.stat-value{font-family:'Syne',sans-serif;font-size:26px;font-weight:700;color:var(--cb-navy);margin-top:6px}
+.stat-change{font-size:12px;margin-top:4px;display:flex;align-items:center;gap:4px}
+.stat-change.up{color:var(--cb-success)}.stat-change.down{color:var(--cb-danger)}
+.stat-accent{width:36px;height:36px;border-radius:var(--r-sm);display:flex;align-items:center;justify-content:center;margin-bottom:12px}
+.stat-accent.gold{background:#FBF0D3;color:var(--cb-gold-dark)}
+.stat-accent.mint{background:#D0F5F3;color:#1A9A90}
+.stat-accent.navy{background:#D4DCE5;color:var(--cb-navy)}
+.stat-accent.green{background:#D3F5E2;color:#1A8A4A}
+
+/* ═══════════════════════════════ GRID ═══════════════════════════════ */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px}
+
+/* ═══════════════════════════════ CARD ═══════════════════════════════ */
+.card{background:var(--cb-surface);border:1px solid var(--cb-border);border-radius:var(--r-lg);padding:24px}
+.card.mb-16{margin-bottom:16px}
+.card-title{font-family:'Syne',sans-serif;font-size:16px;font-weight:600;color:var(--cb-navy);margin-bottom:16px;display:flex;align-items:center;justify-content:space-between}
+.card-title-action{font-family:'DM Sans',sans-serif;font-size:13px;font-weight:400;color:var(--cb-gold-dark);cursor:pointer}
+
+/* ═══════════════════════════════ MATCH CARDS ═══════════════════════════════ */
+.match-card{background:var(--cb-surface);border:1px solid var(--cb-border);border-radius:var(--r-lg);padding:20px;margin-bottom:12px;display:flex;align-items:center;gap:16px;transition:all 0.2s;cursor:pointer}
+.match-card:hover{border-color:var(--cb-gold);box-shadow:0 4px 16px rgba(201,168,76,0.1)}
+.match-avatar{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:16px;flex-shrink:0}
+.match-info{flex:1}
+.match-name{font-weight:500;font-size:15px;color:var(--cb-navy)}
+.match-detail{font-size:13px;color:var(--cb-text-muted);margin-top:2px}
+.match-meta{text-align:right}
+.match-amount{font-family:'Syne',sans-serif;font-weight:700;font-size:18px;color:var(--cb-navy)}
+.match-commission{font-size:12px;color:var(--cb-success)}
+
+/* ═══════════════════════════════ BADGES ═══════════════════════════════ */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:var(--r-full);font-size:12px;font-weight:500}
+.badge-success{background:#D3F5E2;color:#12663A}
+.badge-warning{background:#FDF0D3;color:#7A4D00}
+.badge-danger{background:#FDE8E8;color:#8A1A1A}
+.badge-info{background:#D4DCF5;color:#1A2E8A}
+.badge-gold{background:#FBF0D3;color:var(--cb-gold-dark)}
+.badge-navy{background:var(--cb-navy);color:#fff}
+
+/* ═══════════════════════════════ FORMS ═══════════════════════════════ */
+.form-section-title{font-family:'Syne',sans-serif;font-size:14px;font-weight:600;color:var(--cb-navy);margin-bottom:16px;padding-bottom:8px;border-bottom:1px solid var(--cb-border);display:flex;align-items:center;gap:8px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.form-row.single{grid-template-columns:1fr}
+.form-row.triple{grid-template-columns:1fr 1fr 1fr}
+.form-group{display:flex;flex-direction:column;gap:6px}
+label{font-size:13px;font-weight:500;color:var(--cb-text)}
+input,select,textarea{border:1px solid var(--cb-border);border-radius:var(--r-sm);padding:10px 14px;font-size:14px;font-family:'DM Sans',sans-serif;color:var(--cb-text);background:var(--cb-surface);transition:border-color 0.15s;outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--cb-gold)}
+textarea{resize:vertical;min-height:80px}
+.form-hint{font-size:11px;color:var(--cb-text-light)}
+.kyc-box{border:2px dashed var(--cb-border);border-radius:var(--r-lg);padding:24px;text-align:center;cursor:pointer;transition:all 0.2s;background:var(--cb-cream)}
+.kyc-box:hover{border-color:var(--cb-gold);background:#FBF8F2}
+.kyc-box i{font-size:32px;color:var(--cb-text-light);display:block;margin-bottom:8px}
+.kyc-box p{font-size:13px;color:var(--cb-text-muted)}
+.kyc-box span{font-size:12px;color:var(--cb-text-light)}
+
+/* ═══════════════════════════════ BUTTONS ═══════════════════════════════ */
+.btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:var(--r-full);font-size:14px;font-weight:500;font-family:'DM Sans',sans-serif;cursor:pointer;border:none;transition:all 0.2s}
+.btn-primary{background:var(--cb-navy);color:#fff}.btn-primary:hover{background:var(--cb-navy-light)}
+.btn-gold{background:var(--cb-gold);color:var(--cb-navy)}.btn-gold:hover{background:var(--cb-gold-light)}
+.btn-outline{background:transparent;color:var(--cb-navy);border:1px solid var(--cb-border)}.btn-outline:hover{border-color:var(--cb-navy);background:var(--cb-cream)}
+.btn-danger{background:var(--cb-danger);color:#fff}
+.btn-sm{padding:7px 16px;font-size:13px}
+.btn-row{display:flex;gap:12px;margin-top:24px}
+
+/* ═══════════════════════════════ TABLES ═══════════════════════════════ */
+.tx-table{width:100%;border-collapse:collapse}
+.tx-table th{font-size:11px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;color:var(--cb-text-light);padding:0 0 12px;text-align:left;border-bottom:1px solid var(--cb-border)}
+.tx-table td{padding:14px 0;border-bottom:1px solid var(--cb-cream-dark);font-size:14px;vertical-align:middle}
+.tx-table tr:last-child td{border-bottom:none}
+.tx-product{display:flex;align-items:center;gap:10px}
+.tx-icon{width:36px;height:36px;border-radius:var(--r-sm);background:var(--cb-cream);display:flex;align-items:center;justify-content:center;color:var(--cb-text-muted);font-size:16px;flex-shrink:0}
+
+/* ═══════════════════════════════ ESCROW FLOW ═══════════════════════════════ */
+.escrow-flow{display:flex;align-items:center;margin:16px 0}
+.escrow-step{flex:1;text-align:center;position:relative}
+.escrow-step::after{content:'';position:absolute;top:20px;left:50%;width:100%;height:2px;background:var(--cb-border);z-index:0}
+.escrow-step:last-child::after{display:none}
+.escrow-dot{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 8px;position:relative;z-index:1;font-size:18px}
+.escrow-dot.done{background:var(--cb-success);color:#fff}
+.escrow-dot.active{background:var(--cb-gold);color:var(--cb-navy);box-shadow:0 0 0 4px rgba(201,168,76,0.2)}
+.escrow-dot.pending{background:var(--cb-cream-dark);color:var(--cb-text-light)}
+.escrow-label{font-size:11px;color:var(--cb-text-muted);line-height:1.3}
+
+/* ═══════════════════════════════ RISK BARS ═══════════════════════════════ */
+.risk-bar{height:8px;border-radius:var(--r-full);background:var(--cb-cream-dark);overflow:hidden;margin:8px 0}
+.risk-fill{height:100%;border-radius:var(--r-full);transition:width 0.6s ease}
+
+/* ═══════════════════════════════ ALERTS ═══════════════════════════════ */
+.alert{padding:14px 16px;border-radius:var(--r-md);font-size:13px;display:flex;align-items:flex-start;gap:10px;margin-bottom:12px}
+.alert i{font-size:18px;flex-shrink:0;margin-top:1px}
+.alert-warning{background:#FDF0D3;color:#7A4D00;border:1px solid #EDCC7A}
+.alert-danger{background:#FDE8E8;color:#8A1A1A;border:1px solid #F5AAAA}
+.alert-info{background:#E8EDF8;color:#1A2E6A;border:1px solid #AABCEE}
+.alert-success{background:#D3F5E2;color:#12663A;border:1px solid #78DAAA}
+
+/* ═══════════════════════════════ CHAT ═══════════════════════════════ */
+.chat-messages{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px;background:var(--cb-cream);min-height:280px;max-height:360px}
+.chat-msg{max-width:72%;padding:10px 14px;border-radius:var(--r-lg);font-size:14px;line-height:1.5}
+.chat-msg.them{background:var(--cb-surface);border:1px solid var(--cb-border);border-bottom-left-radius:4px;align-self:flex-start}
+.chat-msg.me{background:var(--cb-navy);color:#fff;border-bottom-right-radius:4px;align-self:flex-end}
+.chat-msg .msg-time{font-size:11px;opacity:0.6;margin-top:4px}
+.chat-input{padding:12px;border-top:1px solid var(--cb-border);display:flex;gap:8px;background:var(--cb-surface)}
+.chat-input input{flex:1;border-radius:var(--r-full);padding:10px 16px}
+.chat-input button{width:40px;height:40px;border-radius:50%;background:var(--cb-navy);border:none;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+
+/* ═══════════════════════════════ USER TYPE TOGGLE ═══════════════════════════════ */
+.type-toggle{display:flex;background:var(--cb-cream-dark);border-radius:var(--r-full);padding:4px;margin-bottom:28px;width:fit-content}
+.type-btn{padding:10px 28px;border-radius:var(--r-full);font-size:14px;font-weight:500;cursor:pointer;border:none;background:transparent;color:var(--cb-text-muted);transition:all 0.2s;font-family:'DM Sans',sans-serif}
+.type-btn.active{background:var(--cb-navy);color:#fff}
+
+/* ═══════════════════════════════ HERO ═══════════════════════════════ */
+.hero{background:var(--cb-navy);color:#fff;padding:60px 40px;margin:-32px -40px 32px;position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-60px;right:-60px;width:320px;height:320px;border-radius:50%;background:rgba(201,168,76,0.08)}
+.hero::after{content:'';position:absolute;bottom:-80px;left:100px;width:200px;height:200px;border-radius:50%;background:rgba(46,196,182,0.06)}
+.hero-tag{display:inline-flex;align-items:center;gap:6px;background:rgba(201,168,76,0.15);border:1px solid rgba(201,168,76,0.3);color:var(--cb-gold-light);border-radius:var(--r-full);padding:5px 14px;font-size:12px;font-weight:500;margin-bottom:20px}
+.hero h1{font-family:'Syne',sans-serif;font-size:40px;font-weight:800;line-height:1.15;margin-bottom:16px}
+.hero h1 span{color:var(--cb-gold)}
+.hero p{color:#94A8BC;font-size:16px;line-height:1.7;max-width:500px;margin-bottom:32px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap}
+.hero-stat-row{display:flex;gap:32px;margin-top:40px;padding-top:32px;border-top:1px solid rgba(255,255,255,0.08)}
+.hero-stat-item{display:flex;flex-direction:column;gap:4px}
+.hero-stat-num{font-family:'Syne',sans-serif;font-size:24px;font-weight:700;color:#fff}
+.hero-stat-desc{font-size:13px;color:#94A8BC}
+
+/* ═══════════════════════════════ CREDIT CARD CHIP ═══════════════════════════════ */
+.card-chip{background:linear-gradient(135deg,var(--cb-navy),var(--cb-navy-light));border-radius:var(--r-lg);padding:20px;color:#fff;position:relative;overflow:hidden;min-height:120px}
+.card-chip::before{content:'';position:absolute;top:-30px;right:-30px;width:100px;height:100px;border-radius:50%;background:rgba(255,255,255,0.04)}
+.card-chip-bank{font-size:12px;opacity:0.7;margin-bottom:8px}
+.card-chip-num{font-family:'Syne',sans-serif;font-size:16px;letter-spacing:0.12em;margin-bottom:16px}
+.card-chip-row{display:flex;justify-content:space-between;align-items:flex-end}
+.card-chip-label{font-size:10px;opacity:0.6;margin-bottom:2px}
+.card-chip-val{font-size:14px;font-weight:500}
+.card-chip-network{position:absolute;top:20px;right:20px;font-family:'Syne',sans-serif;font-size:14px;font-weight:700;opacity:0.8}
+.card-chip-limit{position:absolute;bottom:20px;right:20px;text-align:right}
+.card-chip-limit-label{font-size:10px;opacity:0.5}
+.card-chip-limit-val{font-size:18px;font-weight:700;font-family:'Syne',sans-serif;color:var(--cb-gold)}
+
+/* ═══════════════════════════════ PROGRESS ═══════════════════════════════ */
+.progress{height:6px;border-radius:var(--r-full);background:var(--cb-cream-dark);overflow:hidden;margin:6px 0}
+.progress-fill{height:100%;border-radius:var(--r-full)}
+
+/* ═══════════════════════════════ TABS ═══════════════════════════════ */
+.tabs{display:flex;border-bottom:1px solid var(--cb-border);margin-bottom:24px}
+.tab{padding:10px 20px;font-size:14px;color:var(--cb-text-muted);cursor:pointer;border-bottom:2px solid transparent;transition:all 0.15s;font-weight:400}
+.tab.active{color:var(--cb-navy);border-bottom-color:var(--cb-navy);font-weight:500}
+
+/* ═══════════════════════════════ PROFILE ═══════════════════════════════ */
+.profile-header{display:flex;align-items:center;gap:20px;margin-bottom:28px}
+.profile-avatar{width:72px;height:72px;border-radius:50%;background:var(--cb-navy);display:flex;align-items:center;justify-content:center;font-family:'Syne',sans-serif;font-weight:700;font-size:24px;color:#fff;flex-shrink:0}
+.profile-info h2{font-family:'Syne',sans-serif;font-size:20px;font-weight:700;color:var(--cb-navy)}
+.profile-info p{font-size:14px;color:var(--cb-text-muted);margin-top:4px}
+.profile-badges{display:flex;gap:8px;margin-top:8px}
+
+/* ═══════════════════════════════ ADMIN ═══════════════════════════════ */
+.admin-alert-item{display:flex;align-items:center;gap:12px;padding:14px;border-radius:var(--r-md);border:1px solid var(--cb-border);margin-bottom:8px;background:var(--cb-surface)}
+.admin-alert-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+
+/* ═══════════════════════════════ UTILS ═══════════════════════════════ */
+.flex-between{display:flex;align-items:center;justify-content:space-between}
+.separator{height:1px;background:var(--cb-border);margin:20px 0}
+.mt-8{margin-top:8px}.mt-16{margin-top:16px}.mt-24{margin-top:24px}
+.mb-16{margin-bottom:16px}
+
+/* ═══════════════════════════════ SCROLLBAR ═══════════════════════════════ */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-thumb{background:var(--cb-border);border-radius:2px}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════ NAVIGATION ══════════════════════ -->
+<nav>
+  <div class="logo">
+    <div class="logo-icon">CB</div>
+    CardBridge
+  </div>
+  <div class="nav-links">
+    <button class="nav-link active" onclick="showNav('home',this)">Home</button>
+    <button class="nav-link" onclick="showNav('marketplace',this)">Marketplace</button>
+    <button class="nav-link" onclick="showNav('how',this)">How It Works</button>
+    <button class="nav-link" onclick="showNav('security',this)">Security</button>
+  </div>
+  <button class="nav-cta" onclick="showPage('register')">Get Started</button>
+</nav>
+
+<!-- ══════════════════════ APP SHELL ══════════════════════ -->
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-section">Overview</div>
+    <button class="sidebar-item active" onclick="showPage('dashboard')">
+      <i class="ti ti-layout-dashboard"></i>Dashboard
+    </button>
+    <button class="sidebar-item" onclick="showPage('matches')">
+      <i class="ti ti-arrows-exchange"></i>Smart Matches<span class="badge">4</span>
+    </button>
+    <button class="sidebar-item" onclick="showPage('transactions')">
+      <i class="ti ti-receipt"></i>Transactions
+    </button>
+    <button class="sidebar-item" onclick="showPage('escrow')">
+      <i class="ti ti-safe"></i>Escrow
+    </button>
+    <div class="sidebar-section">Account</div>
+    <button class="sidebar-item" onclick="showPage('register')">
+      <i class="ti ti-user-plus"></i>Register / KYC
+    </button>
+    <button class="sidebar-item" onclick="showPage('profile')">
+      <i class="ti ti-user-circle"></i>My Profile
+    </button>
+    <button class="sidebar-item" onclick="showPage('chat')">
+      <i class="ti ti-message-circle"></i>Secure Chat
+    </button>
+    <div class="sidebar-section">Tools</div>
+    <button class="sidebar-item" onclick="showPage('risk')">
+      <i class="ti ti-shield-check"></i>Risk Analysis
+    </button>
+    <button class="sidebar-item" onclick="showPage('admin')">
+      <i class="ti ti-settings"></i>Admin Panel
+    </button>
+  </aside>
+
+  <!-- ══════════════════════ MAIN CONTENT ══════════════════════ -->
+  <main class="content">
+
+    <!-- ════════════════ PAGE: DASHBOARD ════════════════ -->
+    <div id="page-dashboard" class="page active">
+
+      <!-- HERO BANNER -->
+      <div class="hero">
+        <div class="hero-tag">
+          <i class="ti ti-shield-check" style="font-size:12px"></i>
+          Verified Fintech Platform
+        </div>
+        <h1>Unlock <span>Credit Card</span><br>Discounts for Everyone</h1>
+        <p>Connect verified card holders with buyers to share exclusive bank discounts — safely, transparently, and profitably.</p>
+        <div class="hero-actions">
+          <button class="btn btn-gold" onclick="showPage('register')">
+            <i class="ti ti-credit-card"></i>I Have a Card
+          </button>
+          <button class="btn btn-outline" style="border-color:rgba(255,255,255,0.2);color:#fff" onclick="showPage('register')">
+            <i class="ti ti-shopping-cart"></i>I Need a Discount
+          </button>
+        </div>
+        <div class="hero-stat-row">
+          <div class="hero-stat-item">
+            <span class="hero-stat-num">₹2.4Cr+</span>
+            <span class="hero-stat-desc">Saved in discounts</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-num">8,400+</span>
+            <span class="hero-stat-desc">Verified users</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-num">99.2%</span>
+            <span class="hero-stat-desc">Trust score avg</span>
+          </div>
+          <div class="hero-stat-item">
+            <span class="hero-stat-num">₹0</span>
+            <span class="hero-stat-desc">Fraud losses</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- STATS ROW -->
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-accent gold"><i class="ti ti-credit-card" style="font-size:18px"></i></div>
+          <div class="stat-label">Active Card Holders</div>
+          <div class="stat-value">1,284</div>
+          <div class="stat-change up"><i class="ti ti-trending-up" style="font-size:14px"></i>+12% this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent mint"><i class="ti ti-users" style="font-size:18px"></i></div>
+          <div class="stat-label">Active Buyers</div>
+          <div class="stat-value">3,102</div>
+          <div class="stat-change up"><i class="ti ti-trending-up" style="font-size:14px"></i>+18% this month</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent navy"><i class="ti ti-safe" style="font-size:18px"></i></div>
+          <div class="stat-label">In Escrow Now</div>
+          <div class="stat-value">₹48.2L</div>
+          <div class="stat-change up"><i class="ti ti-trending-up" style="font-size:14px"></i>+6% this week</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent green"><i class="ti ti-percentage" style="font-size:18px"></i></div>
+          <div class="stat-label">Avg Commission Paid</div>
+          <div class="stat-value">3.8%</div>
+          <div class="stat-change down"><i class="ti ti-trending-down" style="font-size:14px"></i>-0.2% vs last mo</div>
+        </div>
+      </div>
+
+      <!-- MATCHES + ESCROW STATUS -->
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">
+            Recent Matches
+            <span class="card-title-action" onclick="showPage('matches')">View all →</span>
+          </div>
+          <div class="match-card" onclick="showPage('matches')">
+            <div class="match-avatar" style="background:#D4DCF5;color:#1A2E8A">RK</div>
+            <div class="match-info">
+              <div class="match-name">Rajesh Kumar</div>
+              <div class="match-detail">HDFC Regalia · Visa · ₹80K limit</div>
+              <div class="mt-8">
+                <span class="badge badge-success">KYC Verified</span>
+                <span class="badge badge-gold">4.9★</span>
+              </div>
+            </div>
+            <div class="match-meta">
+              <div class="match-amount">₹42,000</div>
+              <div class="match-commission">+3.5% commission</div>
+            </div>
+          </div>
+          <div class="match-card" onclick="showPage('matches')">
+            <div class="match-avatar" style="background:#D0F5F3;color:#1A9A90">PS</div>
+            <div class="match-info">
+              <div class="match-name">Priya Sharma</div>
+              <div class="match-detail">ICICI Amazon Pay · MasterCard</div>
+              <div class="mt-8">
+                <span class="badge badge-success">KYC Verified</span>
+                <span class="badge badge-gold">4.7★</span>
+              </div>
+            </div>
+            <div class="match-meta">
+              <div class="match-amount">₹18,500</div>
+              <div class="match-commission">+4.0% commission</div>
+            </div>
+          </div>
+          <div class="match-card" onclick="showPage('matches')">
+            <div class="match-avatar" style="background:#FBF0D3;color:#8B6914">AM</div>
+            <div class="match-info">
+              <div class="match-name">Arjun Mehta</div>
+              <div class="match-detail">SBI Simply Click · RuPay</div>
+              <div class="mt-8">
+                <span class="badge badge-success">KYC Verified</span>
+                <span class="badge badge-gold">4.6★</span>
+              </div>
+            </div>
+            <div class="match-meta">
+              <div class="match-amount">₹8,200</div>
+              <div class="match-commission">+5.0% commission</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Escrow Status</div>
+          <div class="escrow-flow">
+            <div class="escrow-step">
+              <div class="escrow-dot done"><i class="ti ti-check"></i></div>
+              <div class="escrow-label">Advance<br>Deposited</div>
+            </div>
+            <div class="escrow-step">
+              <div class="escrow-dot done"><i class="ti ti-check"></i></div>
+              <div class="escrow-label">Match<br>Confirmed</div>
+            </div>
+            <div class="escrow-step">
+              <div class="escrow-dot active"><i class="ti ti-shopping-cart"></i></div>
+              <div class="escrow-label">Purchase<br>In Progress</div>
+            </div>
+            <div class="escrow-step">
+              <div class="escrow-dot pending"><i class="ti ti-package"></i></div>
+              <div class="escrow-label">Delivery<br>Verified</div>
+            </div>
+            <div class="escrow-step">
+              <div class="escrow-dot pending"><i class="ti ti-check"></i></div>
+              <div class="escrow-label">Funds<br>Released</div>
+            </div>
+          </div>
+          <div class="separator"></div>
+          <div class="card-title" style="font-size:14px">Active Escrow Amounts</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div>
+              <div class="flex-between" style="margin-bottom:4px">
+                <span style="font-size:13px">iPhone 15 Pro — Flipkart</span>
+                <span style="font-weight:600;font-size:14px">₹1,04,000</span>
+              </div>
+              <div class="progress">
+                <div class="progress-fill" style="width:65%;background:var(--cb-gold)"></div>
+              </div>
+              <div style="font-size:11px;color:var(--cb-text-light)">Purchase in progress · Due in 6 hrs</div>
+            </div>
+            <div>
+              <div class="flex-between" style="margin-bottom:4px">
+                <span style="font-size:13px">Samsung QLED TV — Amazon</span>
+                <span style="font-weight:600;font-size:14px">₹62,500</span>
+              </div>
+              <div class="progress">
+                <div class="progress-fill" style="width:40%;background:var(--cb-mint)"></div>
+              </div>
+              <div style="font-size:11px;color:var(--cb-text-light)">Waiting for card holder · 2 days left</div>
+            </div>
+          </div>
+          <div class="separator"></div>
+          <div class="alert alert-warning">
+            <i class="ti ti-clock"></i>
+            <div><strong>Repayment Due</strong><br>Rajesh Kumar repayment of ₹42,000 due in 3 days.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- HOW IT WORKS -->
+      <div class="card">
+        <div class="card-title">How CardBridge Works</div>
+        <div class="grid-3" style="margin-bottom:0">
+          <div style="text-align:center;padding:16px">
+            <div style="width:56px;height:56px;border-radius:50%;background:#D4DCF5;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:#1A2E8A">
+              <i class="ti ti-user-plus"></i>
+            </div>
+            <div style="font-family:'Syne',sans-serif;font-weight:600;margin-bottom:6px">Register &amp; KYC</div>
+            <div style="font-size:13px;color:var(--cb-text-muted);line-height:1.5">Complete Aadhaar/PAN verification and biometric check. Takes under 5 minutes.</div>
+          </div>
+          <div style="text-align:center;padding:16px">
+            <div style="width:56px;height:56px;border-radius:50%;background:#FBF0D3;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:#8B6914">
+              <i class="ti ti-arrows-exchange"></i>
+            </div>
+            <div style="font-family:'Syne',sans-serif;font-weight:600;margin-bottom:6px">AI Smart Matching</div>
+            <div style="font-size:13px;color:var(--cb-text-muted);line-height:1.5">Our algorithm matches buyers with the right card holder based on bank, card type, product, and trust score.</div>
+          </div>
+          <div style="text-align:center;padding:16px">
+            <div style="width:56px;height:56px;border-radius:50%;background:#D3F5E2;display:flex;align-items:center;justify-content:center;margin:0 auto 12px;font-size:24px;color:#12663A">
+              <i class="ti ti-safe"></i>
+            </div>
+            <div style="font-family:'Syne',sans-serif;font-weight:600;margin-bottom:6px">Escrow &amp; Settle</div>
+            <div style="font-size:13px;color:var(--cb-text-muted);line-height:1.5">Buyer deposits advance into escrow. Card holder purchases. Funds released only after delivery confirmation.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ PAGE: REGISTER ════════════════ -->
+    <div id="page-register" class="page">
+      <div class="page-header">
+        <div class="page-title">Register on CardBridge</div>
+        <div class="page-sub">Complete KYC verification to join the marketplace</div>
+      </div>
+
+      <div class="type-toggle">
+        <button class="type-btn active" onclick="toggleUserType(this,'card-form')">
+          <i class="ti ti-credit-card"></i> Card Holder
+        </button>
+        <button class="type-btn" onclick="toggleUserType(this,'buyer-form')">
+          <i class="ti ti-shopping-cart"></i> Buyer
+        </button>
+      </div>
+
+      <!-- ── CARD HOLDER FORM ── -->
+      <div id="card-form">
+        <div class="card mb-16">
+          <div class="form-section-title"><i class="ti ti-user"></i> Personal Information</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" placeholder="As per Aadhaar">
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="tel" placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label>Date of Birth *</label>
+              <input type="date">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label>Residential Address *</label>
+              <textarea placeholder="Full address with PIN code"></textarea>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Alternate Phone</label>
+              <input type="tel" placeholder="+91">
+            </div>
+            <div class="form-group">
+              <label>City / State</label>
+              <input type="text" placeholder="Mumbai, Maharashtra">
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="form-section-title"><i class="ti ti-id"></i> KYC &amp; Identity Verification</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Aadhaar Number *</label>
+              <input type="text" placeholder="XXXX XXXX XXXX" maxlength="14">
+            </div>
+            <div class="form-group">
+              <label>PAN Number *</label>
+              <input type="text" placeholder="ABCDE1234F" maxlength="10">
+            </div>
+          </div>
+          <div class="form-row triple">
+            <div class="form-group">
+              <label>Aadhaar Front *</label>
+              <div class="kyc-box">
+                <i class="ti ti-upload"></i>
+                <p>Upload Front</p>
+                <span>JPG, PNG, PDF · Max 5MB</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Aadhaar Back *</label>
+              <div class="kyc-box">
+                <i class="ti ti-upload"></i>
+                <p>Upload Back</p>
+                <span>JPG, PNG, PDF · Max 5MB</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Live Selfie *</label>
+              <div class="kyc-box">
+                <i class="ti ti-camera"></i>
+                <p>Take Selfie</p>
+                <span>Face must be clearly visible</span>
+              </div>
+            </div>
+          </div>
+          <div class="alert alert-info">
+            <i class="ti ti-lock"></i>
+            <div>Your KYC data is encrypted and stored in a separate secure vault. It is never visible to other users on the platform.</div>
+          </div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="form-section-title"><i class="ti ti-credit-card"></i> Credit Card Details</div>
+          <div class="grid-2" style="margin-bottom:16px">
+            <div>
+              <div class="form-row" style="margin-bottom:16px">
+                <div class="form-group">
+                  <label>Bank Name *</label>
+                  <select>
+                    <option>Select Bank</option>
+                    <option>HDFC Bank</option><option>ICICI Bank</option>
+                    <option>SBI</option><option>Axis Bank</option>
+                    <option>Kotak Mahindra</option><option>IndusInd Bank</option>
+                    <option>Yes Bank</option><option>Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Card Network *</label>
+                  <select>
+                    <option>Select</option>
+                    <option>Visa</option><option>MasterCard</option>
+                    <option>RuPay</option><option>AmEx</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row" style="margin-bottom:16px">
+                <div class="form-group">
+                  <label>Card Variant</label>
+                  <input type="text" placeholder="e.g. Regalia, Sapphiro, Simply Click">
+                </div>
+                <div class="form-group">
+                  <label>Card Category</label>
+                  <select>
+                    <option>Select</option>
+                    <option>Shopping</option><option>Travel</option>
+                    <option>Cashback</option><option>Premium</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row" style="margin-bottom:0">
+                <div class="form-group">
+                  <label>Total Credit Limit (₹) *</label>
+                  <input type="number" placeholder="0">
+                </div>
+                <div class="form-group">
+                  <label>Max Willing to Spend (₹) *</label>
+                  <input type="number" placeholder="0">
+                </div>
+              </div>
+            </div>
+            <div>
+              <label style="display:block;margin-bottom:8px;font-size:13px">Card Preview</label>
+              <div class="card-chip">
+                <div class="card-chip-bank">HDFC Bank</div>
+                <div class="card-chip-num">•••• •••• •••• 4521</div>
+                <div class="card-chip-row">
+                  <div>
+                    <div class="card-chip-label">CARD HOLDER</div>
+                    <div class="card-chip-val">Your Name</div>
+                  </div>
+                  <div>
+                    <div class="card-chip-label">VALID THRU</div>
+                    <div class="card-chip-val">••/••</div>
+                  </div>
+                </div>
+                <div class="card-chip-network">VISA</div>
+                <div class="card-chip-limit">
+                  <div class="card-chip-limit-label">AVAILABLE</div>
+                  <div class="card-chip-limit-val">₹80K</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="form-row triple">
+            <div class="form-group">
+              <label>Preferred Categories</label>
+              <select>
+                <option>All Categories</option>
+                <option>Electronics</option><option>Fashion</option>
+                <option>Appliances</option><option>Travel</option><option>Groceries</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Commission Expected (%)</label>
+              <input type="number" placeholder="e.g. 3.5" step="0.5" min="1" max="20">
+            </div>
+            <div class="form-group">
+              <label>Repayment Deadline</label>
+              <input type="date">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Preferred Repayment Method</label>
+              <select>
+                <option>Select</option>
+                <option>UPI</option><option>Bank Transfer (IMPS/NEFT)</option><option>Both</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>UPI ID / Bank Account</label>
+              <input type="text" placeholder="yourname@upi or Account No.">
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="form-section-title"><i class="ti ti-shield"></i> Terms &amp; Security Agreement</div>
+          <div class="alert alert-warning">
+            <i class="ti ti-alert-triangle"></i>
+            <div><strong>Important Notice:</strong> By registering, you agree to our escrow-based payment terms. You will not receive the buyer's payment until successful delivery confirmation. Fraud attempts will result in permanent ban and legal action.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px">
+              <input type="checkbox" style="margin-top:2px;width:auto;flex-shrink:0">
+              I agree to the CardBridge Terms of Service and Privacy Policy
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px">
+              <input type="checkbox" style="margin-top:2px;width:auto;flex-shrink:0">
+              I consent to KYC verification and background checks
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px">
+              <input type="checkbox" style="margin-top:2px;width:auto;flex-shrink:0">
+              I understand that device/IP tracking is used for fraud prevention
+            </label>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-gold" onclick="showPage('profile')">
+              <i class="ti ti-check"></i>Submit for Verification
+            </button>
+            <button class="btn btn-outline">Save Draft</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── BUYER FORM ── -->
+      <div id="buyer-form" style="display:none">
+        <div class="card mb-16">
+          <div class="form-section-title"><i class="ti ti-user"></i> Personal Information</div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" placeholder="As per government ID">
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="tel" placeholder="+91 XXXXX XXXXX">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Email Address *</label>
+              <input type="email" placeholder="your@email.com">
+            </div>
+            <div class="form-group">
+              <label>Aadhaar / PAN *</label>
+              <input type="text" placeholder="Aadhaar or PAN number">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label>Residential / Delivery Address *</label>
+              <textarea placeholder="Full delivery address with PIN code"></textarea>
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="form-section-title"><i class="ti ti-shopping-cart"></i> Purchase Request</div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label>Product Link (Amazon/Flipkart/etc.) *</label>
+              <input type="url" placeholder="https://...">
+            </div>
+          </div>
+          <div class="form-row single">
+            <div class="form-group">
+              <label>Product Name &amp; Description *</label>
+              <textarea placeholder="Describe the product, model, color, size..."></textarea>
+            </div>
+          </div>
+          <div class="form-row triple">
+            <div class="form-group">
+              <label>Original Price (₹) *</label>
+              <input type="number" placeholder="0">
+            </div>
+            <div class="form-group">
+              <label>Discounted Price (₹) *</label>
+              <input type="number" placeholder="0">
+              <div class="form-hint">Price after card offer</div>
+            </div>
+            <div class="form-group">
+              <label>Your Savings (₹)</label>
+              <input type="number" placeholder="Auto-calculated" readonly style="background:var(--cb-cream)">
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Required Card Bank *</label>
+              <select>
+                <option>Any Bank</option>
+                <option>HDFC Bank</option><option>ICICI Bank</option>
+                <option>SBI</option><option>Axis Bank</option><option>Kotak</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Required Card Type</label>
+              <select>
+                <option>Any</option>
+                <option>Visa</option><option>MasterCard</option>
+                <option>RuPay</option><option>AmEx</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Purchase Deadline *</label>
+              <input type="datetime-local">
+              <div class="form-hint">Offer expiry or sale end time</div>
+            </div>
+            <div class="form-group">
+              <label>Preferred Payment</label>
+              <select>
+                <option>UPI</option><option>Bank Transfer</option><option>Both</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label>Advance Payment Ready? *</label>
+              <select>
+                <option>Yes — I can pay full amount now</option>
+                <option>Yes — I can pay 50% now</option>
+                <option>Negotiable</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Max Commission Willing to Pay (%)</label>
+              <input type="number" placeholder="e.g. 4.0" step="0.5">
+            </div>
+          </div>
+        </div>
+
+        <div class="card mb-16">
+          <div class="form-section-title"><i class="ti ti-id"></i> KYC Verification</div>
+          <div class="form-row triple">
+            <div class="form-group">
+              <label>Govt ID Front *</label>
+              <div class="kyc-box">
+                <i class="ti ti-upload"></i>
+                <p>Upload ID</p>
+                <span>Aadhaar / Voter ID / Passport</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Govt ID Back *</label>
+              <div class="kyc-box">
+                <i class="ti ti-upload"></i>
+                <p>Upload Back</p>
+                <span>If applicable</span>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Live Selfie *</label>
+              <div class="kyc-box">
+                <i class="ti ti-camera"></i>
+                <p>Take Selfie</p>
+                <span>Face clearly visible</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="form-section-title"><i class="ti ti-shield"></i> Agreement</div>
+          <div class="alert alert-info">
+            <i class="ti ti-info-circle"></i>
+            <div>Your advance will be held in escrow and released to the card holder only after you confirm delivery and satisfaction.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px">
+              <input type="checkbox" style="margin-top:2px;width:auto;flex-shrink:0">
+              I agree to Terms of Service and the escrow payment policy
+            </label>
+            <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-size:14px">
+              <input type="checkbox" style="margin-top:2px;width:auto;flex-shrink:0">
+              I consent to KYC and identity verification
+            </label>
+          </div>
+          <div class="btn-row">
+            <button class="btn btn-gold" onclick="showPage('matches')">
+              <i class="ti ti-search"></i>Find Card Holders
+            </button>
+            <button class="btn btn-outline">Save Draft</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ PAGE: SMART MATCHES ════════════════ -->
+    <div id="page-matches" class="page">
+      <div class="page-header">
+        <div class="flex-between">
+          <div>
+            <div class="page-title">Smart Matches</div>
+            <div class="page-sub">AI-matched verified card holders for your request</div>
+          </div>
+          <div style="display:flex;gap:8px;align-items:center">
+            <select style="font-size:13px;padding:8px 12px">
+              <option>All Banks</option><option>HDFC</option><option>ICICI</option><option>SBI</option>
+            </select>
+            <select style="font-size:13px;padding:8px 12px">
+              <option>Sort: Best Match</option>
+              <option>Sort: Lowest Commission</option>
+              <option>Sort: Highest Limit</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="alert alert-success">
+        <i class="ti ti-robot"></i>
+        <div><strong>AI Analysis:</strong> Based on your request (iPhone 15 Pro on Flipkart, HDFC card required), we found 4 verified card holders with 94%+ match score.</div>
+      </div>
+
+      <!-- MATCH RESULT 1 (Best) -->
+      <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="card" style="cursor:pointer;border-color:var(--cb-gold)">
+          <div style="display:flex;align-items:flex-start;gap:16px">
+            <div class="match-avatar" style="background:#D4DCF5;color:#1A2E8A;width:56px;height:56px;font-size:18px">RK</div>
+            <div style="flex:1">
+              <div class="flex-between">
+                <div>
+                  <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:17px">Rajesh Kumar</div>
+                  <div style="font-size:13px;color:var(--cb-text-muted);margin-top:2px">Mumbai, Maharashtra · Member since Jan 2024</div>
+                </div>
+                <div>
+                  <span class="badge badge-gold">98% Match</span>
+                  <span class="badge badge-navy" style="margin-left:6px">Best Choice</span>
+                </div>
+              </div>
+              <div class="grid-3 mt-16" style="margin-top:16px;margin-bottom:0">
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Bank &amp; Card</div><div style="font-size:14px;font-weight:500;margin-top:3px">HDFC Regalia · Visa</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Available Limit</div><div style="font-size:14px;font-weight:500;margin-top:3px">₹1,20,000</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Commission</div><div style="font-size:14px;font-weight:500;color:var(--cb-success);margin-top:3px">3.5%</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Trust Score</div><div style="font-size:14px;font-weight:500;margin-top:3px">⭐ 4.9 / 5.0</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Transactions</div><div style="font-size:14px;font-weight:500;margin-top:3px">47 done</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Repayment Deadline</div><div style="font-size:14px;font-weight:500;margin-top:3px">Within 7 days</div></div>
+              </div>
+              <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+                <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>Aadhaar Verified</span>
+                <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>PAN Verified</span>
+                <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>Face KYC</span>
+                <span class="badge badge-info"><i class="ti ti-check" style="font-size:11px"></i>Bank Linked</span>
+              </div>
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--cb-border);margin-top:16px;padding-top:14px;display:flex;gap:10px">
+            <button class="btn btn-gold btn-sm" onclick="showPage('escrow')">
+              <i class="ti ti-safe"></i>Accept &amp; Open Escrow
+            </button>
+            <button class="btn btn-outline btn-sm" onclick="showPage('chat')">
+              <i class="ti ti-message-circle"></i>Chat First
+            </button>
+            <button class="btn btn-outline btn-sm"><i class="ti ti-eye"></i>View Profile</button>
+          </div>
+        </div>
+
+        <!-- MATCH RESULT 2 -->
+        <div class="card">
+          <div style="display:flex;align-items:flex-start;gap:16px">
+            <div class="match-avatar" style="background:#D0F5F3;color:#1A9A90;width:56px;height:56px;font-size:18px">PS</div>
+            <div style="flex:1">
+              <div class="flex-between">
+                <div>
+                  <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:17px">Priya Sharma</div>
+                  <div style="font-size:13px;color:var(--cb-text-muted);margin-top:2px">Bengaluru, Karnataka · Member since Mar 2024</div>
+                </div>
+                <span class="badge badge-success">91% Match</span>
+              </div>
+              <div class="grid-3 mt-16" style="margin-top:16px;margin-bottom:0">
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Bank &amp; Card</div><div style="font-size:14px;font-weight:500;margin-top:3px">HDFC Millennia · Visa</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Available Limit</div><div style="font-size:14px;font-weight:500;margin-top:3px">₹95,000</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Commission</div><div style="font-size:14px;font-weight:500;color:var(--cb-success);margin-top:3px">4.0%</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Trust Score</div><div style="font-size:14px;font-weight:500;margin-top:3px">⭐ 4.7 / 5.0</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Transactions</div><div style="font-size:14px;font-weight:500;margin-top:3px">31 done</div></div>
+                <div><div style="font-size:11px;color:var(--cb-text-light)">Repayment</div><div style="font-size:14px;font-weight:500;margin-top:3px">Within 5 days</div></div>
+              </div>
+              <div style="margin-top:14px;display:flex;gap:10px">
+                <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>KYC Verified</span>
+                <span class="badge badge-info"><i class="ti ti-check" style="font-size:11px"></i>Bank Linked</span>
+              </div>
+            </div>
+          </div>
+          <div style="border-top:1px solid var(--cb-border);margin-top:16px;padding-top:14px;display:flex;gap:10px">
+            <button class="btn btn-primary btn-sm"><i class="ti ti-safe"></i>Accept &amp; Open Escrow</button>
+            <button class="btn btn-outline btn-sm" onclick="showPage('chat')">
+              <i class="ti ti-message-circle"></i>Chat First
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ PAGE: TRANSACTIONS ════════════════ -->
+    <div id="page-transactions" class="page">
+      <div class="page-header">
+        <div class="flex-between">
+          <div>
+            <div class="page-title">Transactions</div>
+            <div class="page-sub">Your complete transaction history</div>
+          </div>
+          <div style="display:flex;gap:8px">
+            <input type="text" placeholder="Search..." style="width:200px;font-size:13px">
+            <select style="font-size:13px;padding:8px 12px">
+              <option>All Status</option>
+              <option>Completed</option><option>In Progress</option><option>Disputed</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="tabs">
+        <div class="tab active">All (18)</div>
+        <div class="tab">Completed (14)</div>
+        <div class="tab">In Progress (2)</div>
+        <div class="tab">Disputes (1)</div>
+        <div class="tab">Repayment Due (1)</div>
+      </div>
+      <div class="card">
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>Product</th>
+              <th>Card Holder</th>
+              <th>Amount</th>
+              <th>Commission</th>
+              <th>Date</th>
+              <th>Status</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div class="tx-product"><div class="tx-icon"><i class="ti ti-device-mobile"></i></div><div><div style="font-weight:500">iPhone 15 Pro 256GB</div><div style="font-size:12px;color:var(--cb-text-muted)">Flipkart · HDFC Offer</div></div></div></td>
+              <td>Rajesh K.</td>
+              <td style="font-weight:600">₹1,04,000</td>
+              <td style="color:var(--cb-success)">₹3,640</td>
+              <td style="color:var(--cb-text-muted);font-size:13px">May 18, 2025</td>
+              <td><span class="badge badge-warning">In Progress</span></td>
+              <td><button class="btn btn-outline btn-sm" onclick="showPage('escrow')">Track</button></td>
+            </tr>
+            <tr>
+              <td><div class="tx-product"><div class="tx-icon"><i class="ti ti-tv"></i></div><div><div style="font-weight:500">Samsung QLED 65"</div><div style="font-size:12px;color:var(--cb-text-muted)">Amazon · ICICI Offer</div></div></div></td>
+              <td>Priya S.</td>
+              <td style="font-weight:600">₹62,500</td>
+              <td style="color:var(--cb-success)">₹2,500</td>
+              <td style="color:var(--cb-text-muted);font-size:13px">May 15, 2025</td>
+              <td><span class="badge badge-success">Completed</span></td>
+              <td><button class="btn btn-outline btn-sm">View</button></td>
+            </tr>
+            <tr>
+              <td><div class="tx-product"><div class="tx-icon"><i class="ti ti-headphones"></i></div><div><div style="font-weight:500">Sony WH-1000XM5</div><div style="font-size:12px;color:var(--cb-text-muted)">Amazon · Axis Offer</div></div></div></td>
+              <td>Arjun M.</td>
+              <td style="font-weight:600">₹22,990</td>
+              <td style="color:var(--cb-success)">₹1,150</td>
+              <td style="color:var(--cb-text-muted);font-size:13px">May 10, 2025</td>
+              <td><span class="badge badge-success">Completed</span></td>
+              <td><button class="btn btn-outline btn-sm">View</button></td>
+            </tr>
+            <tr>
+              <td><div class="tx-product"><div class="tx-icon"><i class="ti ti-device-laptop"></i></div><div><div style="font-weight:500">MacBook Air M3</div><div style="font-size:12px;color:var(--cb-text-muted)">Vijay Sales · SBI Offer</div></div></div></td>
+              <td>Sneha R.</td>
+              <td style="font-weight:600">₹1,14,900</td>
+              <td style="color:var(--cb-danger)">Disputed</td>
+              <td style="color:var(--cb-text-muted);font-size:13px">Apr 28, 2025</td>
+              <td><span class="badge badge-danger">Disputed</span></td>
+              <td><button class="btn btn-danger btn-sm">Resolve</button></td>
+            </tr>
+            <tr>
+              <td><div class="tx-product"><div class="tx-icon"><i class="ti ti-wash-machine"></i></div><div><div style="font-weight:500">LG Front Load Washer</div><div style="font-size:12px;color:var(--cb-text-muted)">Flipkart · HDFC Offer</div></div></div></td>
+              <td>Rajesh K.</td>
+              <td style="font-weight:600">₹42,000</td>
+              <td style="color:var(--cb-success)">₹1,680</td>
+              <td style="color:var(--cb-text-muted);font-size:13px">Apr 20, 2025</td>
+              <td><span class="badge badge-success">Completed</span></td>
+              <td><button class="btn btn-outline btn-sm">View</button></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- ════════════════ PAGE: ESCROW ════════════════ -->
+    <div id="page-escrow" class="page">
+      <div class="page-header">
+        <div class="page-title">Escrow Management</div>
+        <div class="page-sub">Secure payment holding for your active transaction</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Current Transaction</div>
+          <div style="background:var(--cb-cream);border-radius:var(--r-md);padding:16px;margin-bottom:16px">
+            <div style="display:flex;gap:12px;align-items:center">
+              <div class="tx-icon" style="width:48px;height:48px;font-size:22px"><i class="ti ti-device-mobile"></i></div>
+              <div>
+                <div style="font-weight:600;font-size:15px">iPhone 15 Pro 256GB</div>
+                <div style="font-size:13px;color:var(--cb-text-muted);margin-top:2px">Flipkart · HDFC Bank Offer · Natural Titanium</div>
+              </div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:16px">
+              <div>
+                <div style="font-size:11px;color:var(--cb-text-light)">Original Price</div>
+                <div style="font-weight:600;text-decoration:line-through;color:var(--cb-text-muted)">₹1,34,900</div>
+              </div>
+              <div>
+                <div style="font-size:11px;color:var(--cb-text-light)">After HDFC Offer</div>
+                <div style="font-weight:700;font-size:16px;color:var(--cb-success)">₹1,04,000</div>
+              </div>
+              <div>
+                <div style="font-size:11px;color:var(--cb-text-light)">Your Savings</div>
+                <div style="font-weight:700;font-size:16px;color:var(--cb-gold-dark)">₹30,900</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div class="flex-between" style="font-size:14px"><span style="color:var(--cb-text-muted)">Product Amount</span><span style="font-weight:600">₹1,04,000</span></div>
+            <div class="flex-between" style="font-size:14px"><span style="color:var(--cb-text-muted)">Commission (3.5%)</span><span style="font-weight:600">₹3,640</span></div>
+            <div class="flex-between" style="font-size:14px"><span style="color:var(--cb-text-muted)">Platform Fee (1%)</span><span style="font-weight:600">₹1,040</span></div>
+            <div class="separator" style="margin:8px 0"></div>
+            <div class="flex-between" style="font-size:16px;font-weight:700">
+              <span>Total in Escrow</span>
+              <span style="color:var(--cb-navy)">₹1,08,680</span>
+            </div>
+          </div>
+          <div style="margin-top:20px">
+            <div class="flex-between" style="margin-bottom:8px">
+              <span style="font-size:13px;color:var(--cb-text-muted)">Escrow Funded</span>
+              <span class="badge badge-success">100%</span>
+            </div>
+            <div class="progress"><div class="progress-fill" style="width:100%;background:var(--cb-success)"></div></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-title">Escrow Timeline</div>
+          <div style="display:flex;flex-direction:column;gap:0">
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:0 0 20px">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--cb-success);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px"><i class="ti ti-check"></i></div>
+              <div><div style="font-weight:500;font-size:14px">Buyer Deposited Advance</div><div style="font-size:12px;color:var(--cb-text-muted);margin-top:2px">₹1,08,680 locked in escrow · May 18, 10:32 AM</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:0 0 20px">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--cb-success);color:#fff;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px"><i class="ti ti-check"></i></div>
+              <div><div style="font-weight:500;font-size:14px">Match Accepted by Card Holder</div><div style="font-size:12px;color:var(--cb-text-muted);margin-top:2px">Rajesh Kumar confirmed · May 18, 11:05 AM</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:0 0 20px">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--cb-gold);color:var(--cb-navy);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px"><i class="ti ti-shopping-cart"></i></div>
+              <div>
+                <div style="font-weight:500;font-size:14px">Purchase In Progress</div>
+                <div style="font-size:12px;color:var(--cb-text-muted);margin-top:2px">Card holder placing order now · Est. 6 hours</div>
+                <span class="badge badge-warning" style="margin-top:6px;display:inline-flex">Active</span>
+              </div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;padding:0 0 20px;opacity:0.4">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--cb-cream-dark);color:var(--cb-text-muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px"><i class="ti ti-package"></i></div>
+              <div><div style="font-weight:500;font-size:14px">Delivery Confirmation</div><div style="font-size:12px;color:var(--cb-text-muted);margin-top:2px">Buyer confirms receipt and product condition</div></div>
+            </div>
+            <div style="display:flex;gap:12px;align-items:flex-start;opacity:0.4">
+              <div style="width:32px;height:32px;border-radius:50%;background:var(--cb-cream-dark);color:var(--cb-text-muted);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:16px"><i class="ti ti-check"></i></div>
+              <div><div style="font-weight:500;font-size:14px">Funds Released to Card Holder</div><div style="font-size:12px;color:var(--cb-text-muted);margin-top:2px">₹1,04,000 + ₹3,640 commission released via UPI</div></div>
+            </div>
+          </div>
+          <div class="alert alert-info" style="margin-top:16px">
+            <i class="ti ti-info-circle"></i>
+            <div>Funds are held by CardBridge's RBI-compliant escrow partner and will never be released without mutual confirmation.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">Dispute Resolution</div>
+        <div class="grid-2" style="margin-bottom:0">
+          <div>
+            <div class="alert alert-warning">
+              <i class="ti ti-alert-triangle"></i>
+              <div><strong>How to raise a dispute:</strong> If the product received is not as described, damaged, or never delivered, you can raise a dispute within 48 hours of delivery.</div>
+            </div>
+            <div class="btn-row" style="margin-top:12px">
+              <button class="btn btn-danger btn-sm"><i class="ti ti-flag"></i>Raise Dispute</button>
+              <button class="btn btn-outline btn-sm"><i class="ti ti-check"></i>Confirm Delivery</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:13px;color:var(--cb-text-muted);line-height:1.8">
+              <strong style="color:var(--cb-navy);display:block;margin-bottom:8px">Dispute Process</strong>
+              1. Buyer raises dispute with evidence (photos/video)<br>
+              2. Admin reviews within 24 hours<br>
+              3. Both parties provide statements<br>
+              4. Funds held until resolution<br>
+              5. Decision is final and binding
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ PAGE: PROFILE ════════════════ -->
+    <div id="page-profile" class="page">
+      <div class="page-header">
+        <div class="page-title">My Profile</div>
+        <div class="page-sub">Your verified identity and trust metrics</div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="profile-header">
+            <div class="profile-avatar">RK</div>
+            <div class="profile-info">
+              <h2>Rajesh Kumar</h2>
+              <p>Card Holder · Mumbai, Maharashtra</p>
+              <div class="profile-badges">
+                <span class="badge badge-success"><i class="ti ti-shield-check" style="font-size:11px"></i>KYC Verified</span>
+                <span class="badge badge-gold">Premium Member</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px">
+            <div style="background:var(--cb-cream);border-radius:var(--r-md);padding:14px;text-align:center">
+              <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--cb-navy)">4.9</div>
+              <div style="font-size:12px;color:var(--cb-text-muted)">Trust Score</div>
+              <div style="color:var(--cb-gold);font-size:16px;margin-top:4px">★★★★★</div>
+            </div>
+            <div style="background:var(--cb-cream);border-radius:var(--r-md);padding:14px;text-align:center">
+              <div style="font-family:'Syne',sans-serif;font-size:28px;font-weight:700;color:var(--cb-navy)">47</div>
+              <div style="font-size:12px;color:var(--cb-text-muted)">Transactions</div>
+              <div style="font-size:12px;color:var(--cb-success);margin-top:4px">0 disputes</div>
+            </div>
+          </div>
+          <div class="separator"></div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="flex-between"><span style="font-size:13px;color:var(--cb-text-muted)">Member Since</span><span style="font-size:13px;font-weight:500">January 2024</span></div>
+            <div class="flex-between"><span style="font-size:13px;color:var(--cb-text-muted)">Total Earned</span><span style="font-size:13px;font-weight:500;color:var(--cb-success)">₹42,800</span></div>
+            <div class="flex-between"><span style="font-size:13px;color:var(--cb-text-muted)">Response Rate</span><span style="font-size:13px;font-weight:500">98%</span></div>
+            <div class="flex-between"><span style="font-size:13px;color:var(--cb-text-muted)">Avg Response Time</span><span style="font-size:13px;font-weight:500">&lt; 2 hours</span></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Verification Status</div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;align-items:center;gap:10px"><i class="ti ti-id" style="font-size:20px;color:var(--cb-navy)"></i><span style="font-size:14px;font-weight:500">Aadhaar</span></div>
+              <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>Verified</span>
+            </div>
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;align-items:center;gap:10px"><i class="ti ti-file-text" style="font-size:20px;color:var(--cb-navy)"></i><span style="font-size:14px;font-weight:500">PAN Card</span></div>
+              <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>Verified</span>
+            </div>
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;align-items:center;gap:10px"><i class="ti ti-camera" style="font-size:20px;color:var(--cb-navy)"></i><span style="font-size:14px;font-weight:500">Face KYC</span></div>
+              <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>Verified</span>
+            </div>
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;align-items:center;gap:10px"><i class="ti ti-building-bank" style="font-size:20px;color:var(--cb-navy)"></i><span style="font-size:14px;font-weight:500">Bank Account</span></div>
+              <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>Linked</span>
+            </div>
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;align-items:center;gap:10px"><i class="ti ti-credit-card" style="font-size:20px;color:var(--cb-navy)"></i><span style="font-size:14px;font-weight:500">Credit Card</span></div>
+              <span class="badge badge-success"><i class="ti ti-check" style="font-size:11px"></i>Verified</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">My Cards</div>
+        <div class="grid-2" style="margin-bottom:0">
+          <div class="card-chip">
+            <div class="card-chip-bank">HDFC Bank · Regalia</div>
+            <div class="card-chip-num">•••• •••• •••• 4521</div>
+            <div class="card-chip-row">
+              <div><div class="card-chip-label">CARD HOLDER</div><div class="card-chip-val">Rajesh Kumar</div></div>
+              <div><div class="card-chip-label">EXPIRES</div><div class="card-chip-val">08/27</div></div>
+            </div>
+            <div class="card-chip-network">VISA</div>
+            <div class="card-chip-limit">
+              <div class="card-chip-limit-label">AVAILABLE</div>
+              <div class="card-chip-limit-val">₹1.2L</div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:10px;justify-content:center">
+            <div class="flex-between"><span style="font-size:13px;color:var(--cb-text-muted)">Total Limit</span><span style="font-weight:600">₹1,50,000</span></div>
+            <div class="flex-between"><span style="font-size:13px;color:var(--cb-text-muted)">Used</span><span style="font-weight:600">₹30,000</span></div>
+            <div class="progress"><div class="progress-fill" style="width:20%;background:var(--cb-success)"></div></div>
+            <div class="flex-between"><span style="font-size:13px;color:var(--cb-text-muted)">Listed for Sharing</span><span style="font-weight:600">₹80,000</span></div>
+            <div class="flex-between"><span style="font-size:13px;color:var(--cb-text-muted)">Commission Rate</span><span style="font-weight:600;color:var(--cb-success)">3.5%</span></div>
+            <div><span class="badge badge-success">Active on Marketplace</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ PAGE: SECURE CHAT ════════════════ -->
+    <div id="page-chat" class="page">
+      <div class="page-header">
+        <div class="page-title">Secure Chat</div>
+        <div class="page-sub">End-to-end encrypted messages with matched users</div>
+      </div>
+      <div class="grid-2">
+        <!-- Conversation list -->
+        <div class="card" style="padding:0;overflow:hidden">
+          <div style="padding:16px;border-bottom:1px solid var(--cb-border)">
+            <div style="font-family:'Syne',sans-serif;font-weight:600;font-size:15px">Messages</div>
+          </div>
+          <div style="padding:8px">
+            <div style="padding:12px;border-radius:var(--r-md);background:var(--cb-navy);cursor:pointer;margin-bottom:4px">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="match-avatar" style="background:#3A537A;color:#94A8BC;width:40px;height:40px;font-size:14px">RK</div>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:14px;color:#fff">Rajesh Kumar</div>
+                  <div style="font-size:12px;color:#94A8BC;margin-top:1px">Sure, I'll place the order by 6PM</div>
+                </div>
+                <div style="text-align:right">
+                  <div style="font-size:11px;color:#94A8BC">2:14 PM</div>
+                  <div style="width:18px;height:18px;background:var(--cb-gold);border-radius:50%;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;color:var(--cb-navy);margin-top:4px;margin-left:auto">2</div>
+                </div>
+              </div>
+            </div>
+            <div style="padding:12px;border-radius:var(--r-md);cursor:pointer">
+              <div style="display:flex;align-items:center;gap:10px">
+                <div class="match-avatar" style="background:#D0F5F3;color:#1A9A90;width:40px;height:40px;font-size:14px">PS</div>
+                <div style="flex:1">
+                  <div style="font-weight:500;font-size:14px">Priya Sharma</div>
+                  <div style="font-size:12px;color:var(--cb-text-muted);margin-top:1px">What is the exact model you need?</div>
+                </div>
+                <div style="font-size:11px;color:var(--cb-text-light)">Yesterday</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Chat window -->
+        <div class="card" style="padding:0;overflow:hidden;display:flex;flex-direction:column">
+          <div style="padding:14px 16px;border-bottom:1px solid var(--cb-border);display:flex;align-items:center;gap:10px">
+            <div class="match-avatar" style="background:#D4DCF5;color:#1A2E8A;width:40px;height:40px;font-size:14px">RK</div>
+            <div style="flex:1">
+              <div style="font-weight:500">Rajesh Kumar</div>
+              <div style="font-size:12px;color:var(--cb-success);margin-top:2px">● Online</div>
+            </div>
+            <div style="display:flex;gap:8px">
+              <button class="btn btn-outline btn-sm"><i class="ti ti-phone"></i></button>
+              <button class="btn btn-outline btn-sm"><i class="ti ti-dots-vertical"></i></button>
+            </div>
+          </div>
+          <div class="alert alert-warning" style="border-radius:0;border-left:none;border-right:none;border-top:none;font-size:12px;padding:8px 14px;margin-bottom:0">
+            <i class="ti ti-shield" style="font-size:14px"></i>
+            <div>End-to-end encrypted. Do not share OTPs, card PINs, or passwords here.</div>
+          </div>
+          <div class="chat-messages" id="chat-messages">
+            <div class="chat-msg them">Hi! I saw your request for iPhone 15 Pro. I have an HDFC Regalia card that qualifies for the Flipkart offer.<div class="msg-time">1:48 PM</div></div>
+            <div class="chat-msg me">That's great! The discount is ₹30,900. Is 3.5% commission okay?<div class="msg-time">1:52 PM</div></div>
+            <div class="chat-msg them">Yes, 3.5% works for me. I'll need the full amount in escrow before I place the order though.<div class="msg-time">1:55 PM</div></div>
+            <div class="chat-msg me">Of course, that's the standard process. I'll deposit into escrow now. Can you place the order by 6PM today? The offer expires tonight.<div class="msg-time">2:02 PM</div></div>
+            <div class="chat-msg them">Sure, I'll place the order by 6PM. Please send me the exact product link and confirm the delivery address.<div class="msg-time">2:14 PM</div></div>
+          </div>
+          <div class="chat-input">
+            <input type="text" id="chat-input-field" placeholder="Type a message...">
+            <button onclick="sendChatMsg()"><i class="ti ti-send" style="font-size:18px"></i></button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ PAGE: RISK ANALYSIS ════════════════ -->
+    <div id="page-risk" class="page">
+      <div class="page-header">
+        <div class="page-title">AI Risk Analysis</div>
+        <div class="page-sub">Real-time fraud detection and risk scoring engine</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-accent green"><i class="ti ti-shield-check" style="font-size:18px"></i></div>
+          <div class="stat-label">Risk Score (You)</div>
+          <div class="stat-value" style="color:var(--cb-success)">12/100</div>
+          <div class="stat-change"><span class="badge badge-success">Low Risk</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent gold"><i class="ti ti-eye" style="font-size:18px"></i></div>
+          <div class="stat-label">Fraud Signals Today</div>
+          <div class="stat-value">3</div>
+          <div class="stat-change up">Platform-wide alerts</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent navy"><i class="ti ti-users" style="font-size:18px"></i></div>
+          <div class="stat-label">Accounts Flagged</div>
+          <div class="stat-value">7</div>
+          <div class="stat-change">Under review</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent green"><i class="ti ti-lock" style="font-size:18px"></i></div>
+          <div class="stat-label">Fraud Prevented</div>
+          <div class="stat-value">₹8.4L</div>
+          <div class="stat-change up">This month</div>
+        </div>
+      </div>
+      <div class="grid-2">
+        <div class="card">
+          <div class="card-title">Your Risk Profile</div>
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <div>
+              <div class="flex-between" style="margin-bottom:6px">
+                <span style="font-size:13px">Identity Verification</span>
+                <span class="badge badge-success">Verified</span>
+              </div>
+              <div class="risk-bar"><div class="risk-fill" style="width:95%;background:var(--cb-success)"></div></div>
+            </div>
+            <div>
+              <div class="flex-between" style="margin-bottom:6px">
+                <span style="font-size:13px">Transaction History</span>
+                <span style="font-size:13px;font-weight:500;color:var(--cb-success)">Excellent</span>
+              </div>
+              <div class="risk-bar"><div class="risk-fill" style="width:92%;background:var(--cb-success)"></div></div>
+            </div>
+            <div>
+              <div class="flex-between" style="margin-bottom:6px">
+                <span style="font-size:13px">Device Trust</span>
+                <span style="font-size:13px;font-weight:500;color:var(--cb-success)">Trusted</span>
+              </div>
+              <div class="risk-bar"><div class="risk-fill" style="width:88%;background:var(--cb-success)"></div></div>
+            </div>
+            <div>
+              <div class="flex-between" style="margin-bottom:6px">
+                <span style="font-size:13px">Behavioral Patterns</span>
+                <span style="font-size:13px;font-weight:500;color:var(--cb-success)">Normal</span>
+              </div>
+              <div class="risk-bar"><div class="risk-fill" style="width:85%;background:var(--cb-success)"></div></div>
+            </div>
+            <div>
+              <div class="flex-between" style="margin-bottom:6px">
+                <span style="font-size:13px">Repayment History</span>
+                <span style="font-size:13px;font-weight:500;color:var(--cb-success)">Perfect</span>
+              </div>
+              <div class="risk-bar"><div class="risk-fill" style="width:100%;background:var(--cb-success)"></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-title">Fraud Detection Rules</div>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;gap:10px;align-items:center">
+                <i class="ti ti-device-mobile" style="font-size:18px;color:var(--cb-navy)"></i>
+                <div><div style="font-size:13px;font-weight:500">Multiple Device Login</div><div style="font-size:11px;color:var(--cb-text-muted)">Alert on 3+ devices</div></div>
+              </div>
+              <span class="badge badge-success">Active</span>
+            </div>
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;gap:10px;align-items:center">
+                <i class="ti ti-map-pin" style="font-size:18px;color:var(--cb-navy)"></i>
+                <div><div style="font-size:13px;font-weight:500">Location Anomaly</div><div style="font-size:11px;color:var(--cb-text-muted)">Unusual login location</div></div>
+              </div>
+              <span class="badge badge-success">Active</span>
+            </div>
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;gap:10px;align-items:center">
+                <i class="ti ti-cash" style="font-size:18px;color:var(--cb-navy)"></i>
+                <div><div style="font-size:13px;font-weight:500">High Value Spike</div><div style="font-size:11px;color:var(--cb-text-muted)">&gt;5x normal transaction</div></div>
+              </div>
+              <span class="badge badge-success">Active</span>
+            </div>
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;gap:10px;align-items:center">
+                <i class="ti ti-clock" style="font-size:18px;color:var(--cb-navy)"></i>
+                <div><div style="font-size:13px;font-weight:500">Odd Hours Activity</div><div style="font-size:11px;color:var(--cb-text-muted)">2AM–5AM high-value</div></div>
+              </div>
+              <span class="badge badge-success">Active</span>
+            </div>
+            <div class="flex-between" style="padding:12px;background:var(--cb-cream);border-radius:var(--r-md)">
+              <div style="display:flex;gap:10px;align-items:center">
+                <i class="ti ti-repeat" style="font-size:18px;color:var(--cb-navy)"></i>
+                <div><div style="font-size:13px;font-weight:500">Rapid Repeat Requests</div><div style="font-size:11px;color:var(--cb-text-muted)">5+ requests/hour</div></div>
+              </div>
+              <span class="badge badge-success">Active</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-title">Recent Fraud Alerts <span style="font-family:'DM Sans';font-size:13px;font-weight:400;color:var(--cb-text-muted)">Platform-wide</span></div>
+        <div class="alert alert-danger">
+          <i class="ti ti-alert-triangle"></i>
+          <div><strong>High Risk:</strong> User ID #4821 attempted to create 3 buyer requests with different PAN numbers in 30 minutes. Account suspended, under review.</div>
+        </div>
+        <div class="alert alert-warning">
+          <i class="ti ti-alert-circle"></i>
+          <div><strong>Medium Risk:</strong> Unusual login from IP 103.x.x.x (VPN detected) for card holder ID #2204. OTP verification triggered.</div>
+        </div>
+        <div class="alert alert-info">
+          <i class="ti ti-info-circle"></i>
+          <div><strong>Info:</strong> User ID #3390 completed their first transaction. Elevated monitoring for 30 days as per new user policy.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ════════════════ PAGE: ADMIN PANEL ════════════════ -->
+    <div id="page-admin" class="page">
+      <div class="page-header">
+        <div class="page-title">Admin Panel</div>
+        <div class="page-sub">Platform moderation and operations control</div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card">
+          <div class="stat-accent gold"><i class="ti ti-user-check" style="font-size:18px"></i></div>
+          <div class="stat-label">KYC Pending</div>
+          <div class="stat-value">23</div>
+          <div class="stat-change"><span class="badge badge-warning">Needs Review</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent" style="background:#FDE8E8"><i class="ti ti-flag" style="font-size:18px;color:#8A1A1A"></i></div>
+          <div class="stat-label">Active Disputes</div>
+          <div class="stat-value">4</div>
+          <div class="stat-change"><span class="badge badge-danger">Urgent</span></div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent navy"><i class="ti ti-eye" style="font-size:18px"></i></div>
+          <div class="stat-label">Flagged Accounts</div>
+          <div class="stat-value">7</div>
+          <div class="stat-change">Awaiting action</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-accent green"><i class="ti ti-check" style="font-size:18px"></i></div>
+          <div class="stat-label">Resolved Today</div>
+          <div class="stat-value">12</div>
+          <div class="stat-change up">+4 vs yesterday</div>
+        </div>
+      </div>
+      <div class="tabs">
+        <div class="tab active">KYC Review</div>
+        <div class="tab">Disputes</div>
+        <div class="tab">Flagged Accounts</div>
+        <div class="tab">Repayment Tracking</div>
+        <div class="tab">Commission Reports</div>
+      </div>
+      <div class="card">
+        <div class="card-title">Pending KYC Verifications</div>
+        <table class="tx-table">
+          <thead>
+            <tr>
+              <th>User</th><th>Type</th><th>Submitted</th>
+              <th>Risk Score</th><th>Documents</th><th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><div style="font-weight:500">Vikram Nair</div><div style="font-size:12px;color:var(--cb-text-muted)">vikram.n@gmail.com</div></td>
+              <td><span class="badge badge-navy">Card Holder</span></td>
+              <td style="font-size:13px;color:var(--cb-text-muted)">2 hrs ago</td>
+              <td><span class="badge badge-success">Low (18)</span></td>
+              <td><span class="badge badge-info">3/3 Docs</span></td>
+              <td><div style="display:flex;gap:6px"><button class="btn btn-gold btn-sm">Approve</button><button class="btn btn-outline btn-sm">Review</button></div></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500">Anita Desai</div><div style="font-size:12px;color:var(--cb-text-muted)">anita.d@yahoo.com</div></td>
+              <td><span class="badge badge-info">Buyer</span></td>
+              <td style="font-size:13px;color:var(--cb-text-muted)">4 hrs ago</td>
+              <td><span class="badge badge-warning">Medium (45)</span></td>
+              <td><span class="badge badge-warning">2/3 Docs</span></td>
+              <td><div style="display:flex;gap:6px"><button class="btn btn-outline btn-sm">Request Doc</button><button class="btn btn-outline btn-sm">Hold</button></div></td>
+            </tr>
+            <tr>
+              <td><div style="font-weight:500">Suresh Pillai</div><div style="font-size:12px;color:var(--cb-text-muted)">s.pillai@outlook.com</div></td>
+              <td><span class="badge badge-navy">Card Holder</span></td>
+              <td style="font-size:13px;color:var(--cb-text-muted)">6 hrs ago</td>
+              <td><span class="badge badge-danger">High (72)</span></td>
+              <td><span class="badge badge-info">3/3 Docs</span></td>
+              <td><div style="display:flex;gap:6px"><button class="btn btn-danger btn-sm">Reject</button><button class="btn btn-outline btn-sm">Investigate</button></div></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="card">
+        <div class="card-title">Active Dispute Cases</div>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div class="admin-alert-item">
+            <div class="admin-alert-dot" style="background:var(--cb-danger)"></div>
+            <div style="flex:1">
+              <div class="flex-between">
+                <div style="font-weight:500;font-size:14px">MacBook Air M3 — ₹1,14,900</div>
+                <span class="badge badge-danger">Urgent — Day 3</span>
+              </div>
+              <div style="font-size:12px;color:var(--cb-text-muted);margin-top:3px">Buyer claims wrong model received. Card holder disagrees. Both submitted photos.</div>
+            </div>
+            <button class="btn btn-outline btn-sm" style="margin-left:12px">Mediate</button>
+          </div>
+          <div class="admin-alert-item">
+            <div class="admin-alert-dot" style="background:var(--cb-warning)"></div>
+            <div style="flex:1">
+              <div class="flex-between">
+                <div style="font-weight:500;font-size:14px">Nike Shoes — ₹8,200</div>
+                <span class="badge badge-warning">Day 1</span>
+              </div>
+              <div style="font-size:12px;color:var(--cb-text-muted);margin-top:3px">Buyer reports item not delivered, but card holder shows tracking as delivered.</div>
+            </div>
+            <button class="btn btn-outline btn-sm" style="margin-left:12px">Review</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ══════════════════════ JAVASCRIPT ══════════════════════ -->
+<script>
+/* ── Page navigation ── */
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  const target = document.getElementById('page-' + id);
+  if (target) target.classList.add('active');
+
+  document.querySelectorAll('.sidebar-item').forEach(item => {
+    const onclick = item.getAttribute('onclick') || '';
+    item.classList.toggle('active', onclick.includes("'" + id + "'"));
+  });
+}
+
+/* ── Nav link routing ── */
+function showNav(page, el) {
+  document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+  if (el) el.classList.add('active');
+  const map = { home:'dashboard', marketplace:'matches', how:'escrow', security:'risk' };
+  showPage(map[page] || 'dashboard');
+}
+
+/* ── User type form toggle ── */
+function toggleUserType(btn, formId) {
+  document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('card-form').style.display = formId === 'card-form' ? 'block' : 'none';
+  document.getElementById('buyer-form').style.display = formId === 'buyer-form' ? 'block' : 'none';
+}
+
+/* ── Send chat message ── */
+function sendChatMsg() {
+  const input = document.getElementById('chat-input-field');
+  const text = input.value.trim();
+  if (!text) return;
+  const msgs = document.getElementById('chat-messages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg me';
+  const now = new Date();
+  const hh = now.getHours();
+  const mm = String(now.getMinutes()).padStart(2, '0');
+  const ampm = hh >= 12 ? 'PM' : 'AM';
+  const h12 = hh % 12 || 12;
+  div.innerHTML = text + '<div class="msg-time">' + h12 + ':' + mm + ' ' + ampm + '</div>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  input.value = '';
+}
+
+/* ── Chat on Enter key ── */
+document.getElementById('chat-input-field').addEventListener('keypress', function(e) {
+  if (e.key === 'Enter') sendChatMsg();
+});
+
+/* ── Tab switching ── */
+document.querySelectorAll('.tab').forEach(tab => {
+  tab.addEventListener('click', function() {
+    this.closest('.tabs').querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+</script>
+</body>
+</html>
